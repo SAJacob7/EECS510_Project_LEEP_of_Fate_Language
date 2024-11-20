@@ -3,7 +3,9 @@ The code is a program that automates the below language. It is a Context-Free Gr
 
 
 **LEEP of Fate: Rock Chalk Chronicles**
+
 **Purpose**: To defeat the wildcats using the correct series of spells that will lead to the ultimate demise of the cat.
+
 **Alphabet** = { f, w, a, e,*}
 
 **Rules:**
