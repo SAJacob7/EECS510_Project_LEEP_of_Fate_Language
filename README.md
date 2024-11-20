@@ -1,1 +1,1 @@
-# EECS510_Project_LEEP_of_Fate_Language
+# EECS510 Project: LEEP of Fate Language
