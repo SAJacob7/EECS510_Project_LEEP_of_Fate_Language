@@ -46,9 +46,8 @@ class Leep_of_Fate:
             for transition in self.transitions:
                 if transition[1] == w[i]:
                     if transition[5] in self.stack_symbols:
-                        if pda_stack.peek() == transition[5]:
-                            print("Pushing on: ", pda_stack.peek())
-                            pda_stack.push(transition[5])
+                        pda_stack.push(transition[5])
+                        print("Pushing on: ", pda_stack.peek())
                     if transition[2] in self.stack_symbols:
                         if pda_stack.peek() == transition[2]:
                             print("Popping off: ", pda_stack.peek())
