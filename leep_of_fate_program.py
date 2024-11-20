@@ -40,11 +40,60 @@ class Leep_of_Fate:
         print(self.transitions)
         #print(self.stack_symbols)
     def accept_reject_string(self, w):
+        current_state = 'q0'
+        pda_stack = Stack()
+        string_list = []
+        for c in w:
+            string_list.append(c)
+        for i in range(0,len(w)):
+            for transition in self.transitions:
+                if transition[0] == current_state:
+                    #print(transition[0])
+                    if transition[1] == w[i]:
+                        string_list.pop(0)
+                        if transition[5] in self.stack_symbols and current_state != 'q2':
+                            pda_stack.push(transition[5])
+                            current_state = transition[4]
+                            print("Pushing on: ", pda_stack.peek(), transition)
+                            break
+                        #print("Printing trans2",transition[2])
+                        if transition[2] in self.stack_symbols:
+                            #print(transition[2], pda_stack.peek())
+                            if pda_stack.peek() == transition[2]:
+                                print("Popping off: ", pda_stack.peek(), transition)
+                                current_state = transition[4]
+                                pda_stack.pop()
+                                break
+                    if transition[1] == 'lambda' and pda_stack.peek() != 'Y':
+                        current_state = transition[4]
+                        print(transition, "in lambda")
+                        if transition[5] in self.stack_symbols:
+                            pda_stack.push(transition[5])
+                            print("Pushing on: ", pda_stack.peek())
+                        if transition[2] in self.stack_symbols:
+                            if pda_stack.peek() == transition[2]:
+                                print("Popping off: ", pda_stack.peek())
+                                pda_stack.pop()
+                    if transition[1] == 'lambda' and pda_stack.peek() == 'Y':
+                        current_state = transition[4]
+                        print("Popping off: ", pda_stack.peek(), transition)
+                        pda_stack.pop()
+        if pda_stack.is_empty() == True and len(string_list) == 0:
+            return True
+        else:
+            return False
+
+
+        '''
         pda_stack = Stack()
         pda_stack.push('Z')
+        string_list = []
+        for c in w:
+            string_list.append(c)
         for i in range(0,len(w)):
             for transition in self.transitions:
                 if transition[1] == w[i]:
+                    string_list.pop(0)
                     if transition[5] in self.stack_symbols:
                         pda_stack.push(transition[5])
                         print("Pushing on: ", pda_stack.peek())
@@ -52,7 +101,10 @@ class Leep_of_Fate:
                         if pda_stack.peek() == transition[2]:
                             print("Popping off: ", pda_stack.peek())
                             pda_stack.pop()
+        if pda_stack.is_empty() and len(string_list)==0:
+            return True
+        '''
             
 example = Leep_of_Fate("leep_of_fate_lang.txt")
 example.parse_file()     
-example.accept_reject_string("f*")
+print(example.accept_reject_string("aa*"))
