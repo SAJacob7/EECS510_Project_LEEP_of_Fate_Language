@@ -15,7 +15,7 @@ The code is a program that automates the below language. It is a Context-Free Gr
 
 * Having a * at the very end of the string to denote that this is the end of the spell.
 
-Definitions:
+**Definitions:**
 * f = Fire
 * w = Water
 * a = Air
@@ -32,6 +32,7 @@ Definitions:
 * weefeafaaaa*
 * aeaefwf*
 * f*
+
 **Invalid Strings:**
 * fwaaee
 * fawe*
