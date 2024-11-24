@@ -131,8 +131,11 @@ class Leep_of_Fate:
 def main():
     example = Leep_of_Fate("leep_of_fate_lang.txt")
     example.parse_file()
-    accept, transitions = (example.accept_reject_string("f**"))
-    print(accept)
+    accept, transitions = (example.accept_reject_string("aeaafwaeaaf*"))
+    if accept:
+        print("Accept")
+    else:
+        print("Reject")
     for trans in transitions:
         print(trans)
 
