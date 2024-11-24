@@ -150,7 +150,8 @@ def main():
         print("Accept\n")
         print("Transitions:")
         for trans in transitions:
-            print(trans[0], trans[1], trans[4])
+            print(trans)
+
         print("\nRock Chalk Jayhwak, Go KU!")
 
     else:
