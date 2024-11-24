@@ -1,6 +1,5 @@
 from stack import Stack
 from node import Node
-
 class Leep_of_Fate:
     def __init__(self, text_file):
         self.text_file = text_file
@@ -10,6 +9,8 @@ class Leep_of_Fate:
         self.symbols = None
         self.transitions = None
         self.stack_symbols = None
+        self.finished_trans = False
+        self.visited_transition = []
     
     
     def parse_file(self):
@@ -37,74 +38,102 @@ class Leep_of_Fate:
         #print(self.start_state)
         #print(self.accepting_state)
         #print(self.symbols)
-        print(self.transitions)
+        #print(self.transitions)
         #print(self.stack_symbols)
     def accept_reject_string(self, w):
-        current_state = 'q0'
-        pda_stack = Stack()
-        string_list = []
-        for c in w:
-            string_list.append(c)
-        for i in range(0,len(w)):
-            for transition in self.transitions:
-                if transition[0] == current_state:
-                    #print(transition[0])
-                    if transition[1] == w[i]:
-                        string_list.pop(0)
-                        if transition[5] in self.stack_symbols and current_state != 'q2':
-                            pda_stack.push(transition[5])
-                            current_state = transition[4]
-                            print("Pushing on: ", pda_stack.peek(), transition)
-                            break
-                        #print("Printing trans2",transition[2])
-                        if transition[2] in self.stack_symbols:
-                            #print(transition[2], pda_stack.peek())
-                            if pda_stack.peek() == transition[2]:
-                                print("Popping off: ", pda_stack.peek(), transition)
-                                current_state = transition[4]
-                                pda_stack.pop()
+        if (w[len(w)-1] != "*" or w.count("*") != 1):
+            return (False, [])
+        if((w.count("f") + w.count("w")) % 2 == 0):
+            return (False, [])
+        if((w.count("a") + w.count("e")) % 2 == 1):
+            return (False, [])
+
+        count_of_ae = 0
+        list_ae_counts = []
+        for elem in w:
+            if elem == "f" or elem == "w":
+                if count_of_ae % 2 == 1:
+                    return (False, [])
+                else:
+                    if count_of_ae != 0:
+                        list_ae_counts.append(count_of_ae)
+                    count_of_ae = 0
+            elif elem == "a" or elem == "e":
+                count_of_ae += 1
+                
+        if count_of_ae != 0:
+            list_ae_counts.append(count_of_ae)
+
+        count_fw = w.count("f") + w.count("w")
+        temp_ae_count = 0
+        temp_fw_count = 0
+        start_ae_pop = 0
+        start_fw_pop = 0
+        current_state = "q0"
+        accepting_transitions = []
+        
+        accepting_transitions.append(self.transitions[0])
+        current_state = self.transitions[0][4] 
+        for i in range(len(w)):
+            if (i != 0):
+                if ((w[i - 1] == "e" or w[i - 1] == "a") and (w[i] == "f" or w[i] == "w")) or ((w[i - 1] == "f" or w[i - 1] == "w") and (w[i] == "a" or w[i] == "e")):
+                    start_ae_pop = 0
+                    accepting_transitions.append(self.transitions[12])
+                    current_state = self.transitions[12][4]
+            if w[i] == "a" or w[i] == "e":
+                if (start_ae_pop == 0):
+                    if (list_ae_counts[0] / 2 == temp_ae_count):
+                        temp_ae_count = 0
+                        start_ae_pop = 1 
+                        accepting_transitions.append(self.transitions[5])
+                        current_state = self.transitions[5][4]
+                        list_ae_counts.pop(0)
+                    else:
+                        for trans in self.transitions:
+                            if (trans[1] == w[i] and trans[0] == "q1" and start_ae_pop == 0):
+                                current_state = trans[4]
+                                accepting_transitions.append(trans)
+                                temp_ae_count += 1
                                 break
-                    if transition[1] == 'lambda' and pda_stack.peek() != 'Y':
-                        current_state = transition[4]
-                        print(transition, "in lambda")
-                        if transition[5] in self.stack_symbols:
-                            pda_stack.push(transition[5])
-                            print("Pushing on: ", pda_stack.peek())
-                        if transition[2] in self.stack_symbols:
-                            if pda_stack.peek() == transition[2]:
-                                print("Popping off: ", pda_stack.peek())
-                                pda_stack.pop()
-                    if transition[1] == 'lambda' and pda_stack.peek() == 'Y':
-                        current_state = transition[4]
-                        print("Popping off: ", pda_stack.peek(), transition)
-                        pda_stack.pop()
-        if pda_stack.is_empty() == True and len(string_list) == 0:
-            return True
-        else:
-            return False
+                            elif (trans[1] == w[i] and trans[0] == "q2" and start_ae_pop == 1):
+                                current_state = trans[4]
+                                accepting_transitions.append(trans)
+                                break
+                if (start_ae_pop == 1):
+                    for trans in self.transitions:
+                        if (trans[1] == w[i] and trans[0] == "q2" and start_ae_pop == 1):
+                            current_state = trans[4]
+                            accepting_transitions.append(trans)
+                            break
 
-
-        '''
-        pda_stack = Stack()
-        pda_stack.push('Z')
-        string_list = []
-        for c in w:
-            string_list.append(c)
-        for i in range(0,len(w)):
-            for transition in self.transitions:
-                if transition[1] == w[i]:
-                    string_list.pop(0)
-                    if transition[5] in self.stack_symbols:
-                        pda_stack.push(transition[5])
-                        print("Pushing on: ", pda_stack.peek())
-                    if transition[2] in self.stack_symbols:
-                        if pda_stack.peek() == transition[2]:
-                            print("Popping off: ", pda_stack.peek())
-                            pda_stack.pop()
-        if pda_stack.is_empty() and len(string_list)==0:
-            return True
-        '''
+                
+            elif w[i] == "f" or w[i] == "w":
+                for trans in self.transitions:
+                    if (trans[1] == w[i] and trans[0] == "q1" and start_fw_pop == 0):
+                        current_state = trans[4]
+                        accepting_transitions.append(trans)
+                        temp_fw_count += 1
+                    elif (trans[1] == w[i] and trans[0] == "q2" and start_fw_pop == 1):
+                        if current_state != "q2":
+                            accepting_transitions.append(self.transitions[5])
+                        current_state = trans[4]
+                        accepting_transitions.append(trans)
+                if (count_fw // 2) + 1  == temp_fw_count:
+                    temp_fw_count = 0
+                    start_fw_pop = 1
+                    accepting_transitions.append(self.transitions[6]) 
+                    current_state = self.transitions[6][4]  
+        accepting_transitions.append(self.transitions[11])
+        current_state = self.transitions[11][4] 
+        return (True, accepting_transitions)
             
-example = Leep_of_Fate("leep_of_fate_lang.txt")
-example.parse_file()     
-print(example.accept_reject_string("aa*"))
+    
+def main():
+    example = Leep_of_Fate("leep_of_fate_lang.txt")
+    example.parse_file()
+    accept, transitions = (example.accept_reject_string("f**"))
+    print(accept)
+    for trans in transitions:
+        print(trans)
+
+main()
