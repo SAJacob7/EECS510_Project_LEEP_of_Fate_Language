@@ -1,5 +1,5 @@
-from stack import Stack
-from node import Node
+from ascii_magic import AsciiArt
+
 class Leep_of_Fate:
     def __init__(self, text_file):
         self.text_file = text_file
@@ -152,10 +152,14 @@ def main():
         for trans in transitions:
             print(trans)
 
-        print("\nRock Chalk Jayhwak, Go KU!")
+        print("\nRock Chalk Jayhwak, Go KU!\n")
+        my_art = AsciiArt.from_image("jayhawk.png")
+        my_art.to_terminal()
 
     else:
-        print("Reject")
+        print("Reject\n")
+        my_art = AsciiArt.from_image("wildcat.jpg")
+        my_art.to_terminal()
     
 
 main()
