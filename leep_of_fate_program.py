@@ -34,12 +34,7 @@ class Leep_of_Fate:
                 transitions.append(line)
             i = i+1
         self.transitions = transitions
-        #print(self.all_states)
-        #print(self.start_state)
-        #print(self.accepting_state)
-        #print(self.symbols)
-        #print(self.transitions)
-        #print(self.stack_symbols)
+       
     def accept_reject_string(self, w):
         if (w[len(w)-1] != "*" or w.count("*") != 1):
             return (False, [])
@@ -74,12 +69,14 @@ class Leep_of_Fate:
         
         accepting_transitions.append(self.transitions[0])
         current_state = self.transitions[0][4] 
+
         for i in range(len(w)):
             if (i != 0):
                 if ((w[i - 1] == "e" or w[i - 1] == "a") and (w[i] == "f" or w[i] == "w")) or ((w[i - 1] == "f" or w[i - 1] == "w") and (w[i] == "a" or w[i] == "e")):
                     start_ae_pop = 0
                     accepting_transitions.append(self.transitions[12])
                     current_state = self.transitions[12][4]
+
             if w[i] == "a" or w[i] == "e":
                 if (start_ae_pop == 0):
                     if (list_ae_counts[0] / 2 == temp_ae_count):
@@ -88,6 +85,7 @@ class Leep_of_Fate:
                         accepting_transitions.append(self.transitions[5])
                         current_state = self.transitions[5][4]
                         list_ae_counts.pop(0)
+                        
                     else:
                         for trans in self.transitions:
                             if (trans[1] == w[i] and trans[0] == "q1" and start_ae_pop == 0):
@@ -95,10 +93,12 @@ class Leep_of_Fate:
                                 accepting_transitions.append(trans)
                                 temp_ae_count += 1
                                 break
+
                             elif (trans[1] == w[i] and trans[0] == "q2" and start_ae_pop == 1):
                                 current_state = trans[4]
                                 accepting_transitions.append(trans)
                                 break
+
                 if (start_ae_pop == 1):
                     for trans in self.transitions:
                         if (trans[1] == w[i] and trans[0] == "q2" and start_ae_pop == 1):
@@ -113,16 +113,19 @@ class Leep_of_Fate:
                         current_state = trans[4]
                         accepting_transitions.append(trans)
                         temp_fw_count += 1
+
                     elif (trans[1] == w[i] and trans[0] == "q2" and start_fw_pop == 1):
                         if current_state != "q2":
                             accepting_transitions.append(self.transitions[5])
                         current_state = trans[4]
                         accepting_transitions.append(trans)
+
                 if (count_fw // 2) + 1  == temp_fw_count:
                     temp_fw_count = 0
                     start_fw_pop = 1
                     accepting_transitions.append(self.transitions[6]) 
                     current_state = self.transitions[6][4]  
+                    
         accepting_transitions.append(self.transitions[11])
         current_state = self.transitions[11][4] 
         return (True, accepting_transitions)
@@ -131,12 +134,27 @@ class Leep_of_Fate:
 def main():
     example = Leep_of_Fate("leep_of_fate_lang.txt")
     example.parse_file()
-    accept, transitions = (example.accept_reject_string("aeaafwaeaaf*"))
+    print("----------- LEEP of Fate: Rock Chalk Chronicles -----------\n")
+
+    print("Cast your battle spell with these elements to defeat the Wildcat!")
+    print("But beware as if the right spell is not casted the Jahawks will admit defeat to the Wild Beast of the West!\n")
+    print("  Fire: f")
+    print("  Water: w")
+    print("  Air: a")
+    print("  Earth: e")
+    print("  *: Defeating Blow\n")
+    user_input = input("Enter Your Battle Spell Jayhawk!: ")
+    accept, transitions = (example.accept_reject_string(user_input.lower()))
+    
     if accept:
-        print("Accept")
+        print("Accept\n")
+        print("Transitions:")
+        for trans in transitions:
+            print(trans[0], trans[1], trans[4])
+        print("\nRock Chalk Jayhwak, Go KU!")
+
     else:
         print("Reject")
-    for trans in transitions:
-        print(trans)
+    
 
 main()
