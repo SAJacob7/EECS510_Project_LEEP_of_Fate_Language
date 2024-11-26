@@ -36,9 +36,11 @@ class Leep_of_Fate:
         self.transitions = transitions
        
     def accept_reject_string(self, w):
-        if (w[len(w)-1] != "*" or w.count("*") != 1):
+        if (len(w)==0):
             return (False, [])
-        if((w.count("f") + w.count("w")) % 2 == 0):
+        if (w[len(w)-1] != "*" or w.count("*") > 1):
+            return (False, [])
+        if(((w.count("f") + w.count("w")) % 2 == 0) and (w.count("f") + w.count("w")) != 0):
             return (False, [])
         if((w.count("a") + w.count("e")) % 2 == 1):
             return (False, [])
@@ -71,6 +73,8 @@ class Leep_of_Fate:
         current_state = self.transitions[0][4] 
 
         for i in range(len(w)):
+            if (len(w)==1 and w[0] == '*'):
+                accepting_transitions.append(self.transitions[5])
             if (i != 0):
                 if ((w[i - 1] == "e" or w[i - 1] == "a") and (w[i] == "f" or w[i] == "w")) or ((w[i - 1] == "f" or w[i - 1] == "w") and (w[i] == "a" or w[i] == "e")):
                     start_ae_pop = 0
@@ -159,7 +163,7 @@ def main():
     else:
         print("Reject\n")
         my_art = AsciiArt.from_image("wildcat.jpg")
-        my_art.to_terminal()
+        my_art.to_terminal(columns=75)
     
 
 main()
