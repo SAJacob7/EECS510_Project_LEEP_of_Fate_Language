@@ -56,7 +56,7 @@ From there, our code will give you the transitions the PDA took to accept the st
 * weefeafaaaa*
 * aeaefwf*
 * f*
-* *
+* \*
 
 **Invalid Strings:**
 * fwaaee
