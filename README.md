@@ -36,7 +36,7 @@ From there, our code will give you the transitions the PDA took to accept the st
 * If there are f's and w's in the string, then the combined length has to be odd.
   
 * If there are, a's and e's in the string, then the combined length has to be even.
- * Additionally, each run of a’s and e’s must be even in length, meaning they must be consecutively next to each other. For example, aafeaaewf* is valid, but afefeef* is not valid.
+  * Additionally, each run of a’s and e’s must be even in length, meaning they must be consecutively next to each other. For example, aafeaaewf* is valid, but afefeef* is not valid.
 
 **Definitions:**
 * f = Fire
