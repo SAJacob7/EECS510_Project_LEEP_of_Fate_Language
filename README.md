@@ -1,5 +1,5 @@
 # EECS 510 Project: LEEP of Fate Language
-The code is a program that automates the language below. It is a Context-Free Grammar represented by a PDA.
+The code provided is a program that automates the language below. It is a Context-Free Grammar represented by a PDA.
 ## Instructions to Run the Code
 First, download our GitHub project folder (in Visual Studio Code):
 ```
